@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Bookmarklet videocollege_download.js</title>
+	<title>Bookmarklet videocollege_dl</title>
+	<style>
+	body {
+		font-family: sans-serif;
+	}
+
+	a {
+		display: inline-block;
+		padding: 16px;
+		background-color: #81DAF7;
+
+		color: white;
+	}
+	</style>
 </head>
 <body>
+	<!-- Bookmarklet created via http://mrcoles.com/bookmarklet/ -->
 	Drag this to your bookmarks:<br><br>
-	<a href="">Videocollege DL</a>
+	<a href="javascript:(function()%7B(function%20()%20%7Blet%20payload%20%3D%20%7BgetPlayerOptionsRequest%3A%20%7BResourceId%3A%20location.pathname.split('%2F').reverse()%5B0%5D%2CQueryString%3A%20location.search%2CUseScreenReader%3A%20false%2CUrlReferrer%3A%20document.referrer%7D%7D%3Bfetch(%22%2FMediasite%2FPlayerService%2FPlayerService.svc%2Fjson%2FGetPlayerOptions%22%2C%20%7Bmethod%3A%20%22POST%22%2Cheaders%3A%20%7B%22Content-Type%22%3A%20%22application%2Fjson%22%7D%2Cbody%3A%20JSON.stringify(payload)%2Ccredentials%3A%20%22include%22%7D).then((response)%20%3D%3E%20%7Breturn%20response.json()%3B%7D%2C%20(error)%20%3D%3E%20%7Balert(%22An%20error%20occurred.%20See%20console%20for%20details.%22)%3Bconsole.log(error)%3B%7D).then((json)%20%3D%3E%20%7Bif%20(!json%20%7C%7C%20!json.d%20%7C%7C%20!json.d.Presentation%20%7C%7C%20!json.d.Presentation.Streams)%20%7Balert(%22Unusable%20data%20received.%20See%20console%20for%20a%20dump.%22)%3Bconsole.log(json)%3Breturn%3B%7Dlet%20stream%20%3D%20json.d.Presentation.Streams.find((stream)%20%3D%3E%20%7Breturn%20stream.VideoUrls.length%20%3E%200%3B%7D)%3Bif%20(!stream)%20%7Balert(%22No%20video%20stream%20found.%22)%3Breturn%3B%7Dlet%20a%20%3D%20document.createElement('A')%3Ba.download%20%3D%20json.d.Presentation.Title%3Ba.href%20%3D%20stream.VideoUrls%5B0%5D.Location%3Bdocument.body.appendChild(a)%3Ba.click()%3B%7D)%3B%7D)()%7D)()">Videocollege DL</a>
 </body>
 </html>
