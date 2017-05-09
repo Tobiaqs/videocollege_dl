@@ -17,3 +17,10 @@ This is a script that can be used by TU/e students to download video files off o
 1. Navigate to the lecture catalog.
 2. Click the bookmark.
 3. Click the _Download_ link on the lectures you want to download.
+
+### Getting a wget script
+
+1. Navigate to the lecture catalog.
+2. Click the bookmark.
+3. Wait for all download links to be fetched.
+4. Click _wget script_ at the top of the page.
