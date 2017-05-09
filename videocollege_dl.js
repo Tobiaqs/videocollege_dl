@@ -54,7 +54,10 @@
 					let descriptors = [];
 
 					for (let element of elements) {
-						let path = element.children[1].href.split('/').reverse()[0];
+						let launchLink = [].find.call(element.children, (child) => child.id === "Launch");
+
+						let path = launchLink.href.split('/').reverse()[0];
+
 						if (cache[path]) {
 							descriptors.push(cache[path]);
 						}
@@ -93,10 +96,13 @@
 
 			let elements = document.getElementsByClassName("navPanel");
 			for (let element of elements) {
-				if (element.children.length === 2 && !element.getAttribute("data-fetched")) {
+				let hasDownloadLink = [].some.call(element, (child) => child.id === "Download");
+				if (!hasDownloadLink && !element.getAttribute("data-fetched")) {
 					element.setAttribute("data-fetched", "yes");
 
-					let path = element.children[1].href.split('/').reverse()[0];
+					let launchLink = [].find.call(element.children, (child) => child.id === "Launch");
+
+					let path = launchLink.href.split('/').reverse()[0];
 					let queryString = path.match(/\?catalog=([^&]+)/)[1];
 
 					if (cache[path]) {
@@ -128,6 +134,7 @@
 						a.innerHTML = "Download";
 						a.download = title;
 						a.target = "_blank";
+						a.id = "Download";
 						element.appendChild(a);
 					};
 				}
