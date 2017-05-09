@@ -65,14 +65,12 @@
 						return;
 					}
 
-					let script = '';
+					let script = '#!/bin/bash\n';
 
 					descriptors.forEach((descriptor) => {
 						let ext = descriptor.url.match(/\.(.{3})\?/)[1];
 						script += 'wget -O "' + descriptor.title + '.' + ext + '" "' + descriptor.url + '"\n';
 					});
-
-					console.log(script);
 
 					let a = document.createElement('a');
 					let objectURL = URL.createObjectURL(new Blob([script], { type: "text/plain" }));
