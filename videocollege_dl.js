@@ -45,6 +45,54 @@
 		let cache = {};
 
 		setInterval(() => {
+			let title = document.getElementById("SearchResultsTitle");
+
+			if (title.children.length === 0) {
+				let a = document.createElement('A');
+				a.addEventListener("click", () => {
+					let elements = document.getElementsByClassName("navPanel");
+					let descriptors = [];
+
+					for (let element of elements) {
+						let path = element.children[1].href.split('/').reverse()[0];
+						if (cache[path]) {
+							descriptors.push(cache[path]);
+						}
+					}
+
+					if (descriptors.length !== elements.length) {
+						alert("Not all download links fetched for this page. Try again in a few seconds.");
+						return;
+					}
+
+					let script = '';
+
+					descriptors.forEach((descriptor) => {
+						let ext = descriptor.url.match(/\.(.{3})\?/)[1];
+						script += 'wget -O "' + descriptor.title + '.' + ext + '" "' + descriptor.url + '"\n';
+					});
+
+					console.log(script);
+
+					let a = document.createElement('a');
+					let objectURL = URL.createObjectURL(new Blob([script], { type: "text/plain" }));
+					a.href = objectURL;
+					a.download = "lectures.sh";
+
+					// Append anchor to body.
+					document.body.appendChild(a);
+					a.click();
+					
+					URL.revokeObjectURL(objectURL)
+
+					// Remove anchor from body
+					document.body.removeChild(a);
+
+				});
+				a.innerHTML = " (wget script)";
+				title.appendChild(a);
+			}
+
 			let elements = document.getElementsByClassName("navPanel");
 			for (let element of elements) {
 				if (element.children.length === 2 && !element.getAttribute("data-fetched")) {
