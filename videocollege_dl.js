@@ -1,5 +1,5 @@
 (function () {
-	function download (payload) {
+	function download (payload, callback) {
 		fetch("/Mediasite/PlayerService/PlayerService.svc/json/GetPlayerOptions", {
 			method: "POST",
 			headers: {
@@ -27,36 +27,66 @@
 				return;
 			}
 
-			let a = document.createElement('A');
-			a.download = json.d.Presentation.Title;
-			a.href = stream.VideoUrls[0].Location;
-			document.body.appendChild(a);
-			a.click();
+			if (callback) {
+				callback(stream.VideoUrls[0].Location, json.d.Presentation.Title);
+			} else {
+				let a = document.createElement('A');
+				a.download = json.d.Presentation.Title;
+				a.href = stream.VideoUrls[0].Location;
+				document.body.appendChild(a);
+				a.click();
+			}
 		});
 	};
 
 	if (location.pathname.indexOf("/Mediasite/Catalog/Full/") === 0 && !window._videocollege_dl_enabled) {
 		window._videocollege_dl_enabled = true;
-		
-		document.body.addEventListener("click", (event) => {
-			if (event.target.classList.contains("titleLink")) {
-				event.preventDefault();
 
-				let path = event.target.href.split('/').reverse()[0];
-				let queryString = path.match(/\?catalog=([^&]+)/)[1];
+		let cache = {};
 
-				let payload = {
-					getPlayerOptionsRequest: {
-						ResourceId: path.split('?')[0],
-						QueryString: queryString,
-						UseScreenReader: false,
-						UrlReferrer: location.href
+		setInterval(() => {
+			let elements = document.getElementsByClassName("navPanel");
+			for (let element of elements) {
+				if (element.children.length === 2 && !element.getAttribute("data-fetched")) {
+					element.setAttribute("data-fetched", "yes");
+
+					let path = element.children[1].href.split('/').reverse()[0];
+					let queryString = path.match(/\?catalog=([^&]+)/)[1];
+
+					if (cache[path]) {
+						createDownloadLink(cache[path].url, cache[path].title);
+						continue;
 					}
-				};
 
-				download(payload);
+					let payload = {
+						getPlayerOptionsRequest: {
+							ResourceId: path.split('?')[0],
+							QueryString: queryString,
+							UseScreenReader: false,
+							UrlReferrer: location.href
+						}
+					};
+
+					download(payload, createDownloadLink);
+
+					function createDownloadLink (url, title) {
+						if (!cache[path]) {
+							cache[path] = {
+								url: url,
+								title: title
+							};
+						}
+
+						let a = document.createElement("A");
+						a.href = url;
+						a.innerHTML = "Download";
+						a.download = title;
+						a.target = "_blank";
+						element.appendChild(a);
+					};
+				}
 			}
-		});
+ 		}, 1000);
 	} else if (location.pathname.indexOf("/Mediasite/Play/")) {
 		let payload = {
 			getPlayerOptionsRequest: {

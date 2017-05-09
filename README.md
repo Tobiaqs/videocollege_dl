@@ -14,9 +14,6 @@ This is a script that can be used by TU/e students to download video files off o
 
 ### Downloading multiple lectures
 
-See a demo [here](https://tobiaqs.github.io/videocollege_dl/demo.html)
-
 1. Navigate to the lecture catalog.
 2. Click the bookmark.
-3. Optionally enable downloading without confirmation in your browser to prevent *Save as* popups.
-4. Click the titles of the lectures you want to download.
+3. Click the _Download_ link on the lectures you want to download.
